@@ -183,10 +183,10 @@
 ;; Navigation bindings
 (global-set-key [remap goto-line] 'goto-line-with-feedback)
 
-(global-set-key (kbd "<prior>") 'beginning-of-buffer)
-(global-set-key (kbd "<home>") 'beginning-of-buffer)
-(global-set-key (kbd "<next>") 'end-of-buffer)
-(global-set-key (kbd "<end>") 'end-of-buffer)
+;; (global-set-key (kbd "<prior>") 'beginning-of-buffer)
+;; (global-set-key (kbd "<home>") 'beginning-of-buffer)
+;; (global-set-key (kbd "<next>") 'end-of-buffer)
+;; (global-set-key (kbd "<end>") 'end-of-buffer)
 (global-set-key (kbd "M-p") 'backward-paragraph)
 (global-set-key (kbd "M-n") 'forward-paragraph)
 
@@ -344,5 +344,18 @@
 (define-key occur-mode-map (kbd "v") 'occur-mode-display-occurrence)
 (define-key occur-mode-map (kbd "n") 'next-line)
 (define-key occur-mode-map (kbd "p") 'previous-line)
+
+;; Directly going to a line
+(global-set-key "\C-x\C-g" 'goto-line)
+
+;; Compile
+(global-set-key [f9] 'compile)
+
+;; Deletes all spaces and tabs around the point, leaving just one space
+(global-set-key (kbd "C-c SPC") 'just-one-space)
+
+;; Switch between header/source and the corresponding source/header file
+(global-set-key (kbd "C-x o") 'ff-find-other-file)
+
 
 (provide 'key-bindings)

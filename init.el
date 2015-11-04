@@ -91,6 +91,15 @@
      cider
      yesql-ghosts
      string-edit
+     p4
+     cpputils-cmake
+     flycheck-haskell
+     flycheck-color-mode-line
+     haskell-mode
+     helm
+     helm-gtags
+     function-args
+     rfringe
      )))
 
 (condition-case nil
@@ -231,3 +240,87 @@
 ;; Conclude init by setting up specifics for the current user
 (when (file-exists-p user-settings-dir)
   (mapc 'load (directory-files user-settings-dir nil "^[^#].*el$")))
+
+(add-hook 'haskell-mode-hook 'flycheck-mode)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-doc)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-decl-scan)
+
+;; flycheck
+(require 'flycheck-haskell)
+
+(eval-after-load 'flycheck
+  '(progn
+     (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)
+     (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
+     )
+  )
+
+
+;; c style
+;; TODO move to a setup file
+(c-add-style "mx" '("bsd"
+                       (c-basic-offset . 3)
+                       (c-offsets-alist . ((innamespace . [0])))))
+
+(setq c-default-style "mx")
+
+;; cpputils-cmake
+(require 'cpputils-cmake)
+(add-hook 'c-mode-hook (lambda () (cppcm-reload-all)))
+(add-hook 'c++-mode-hook (lambda () (cppcm-reload-all)))
+(setq cppcm-build-dirname "build")
+
+;; display flymake messages
+(require 'rfringe)
+
+;; projectile
+;; (projectile-global-mode)
+
+;; perforce
+(require 'p4)
+
+
+
+;; HELM
+
+;; this variables must be set before load helm-gtags
+;; you can change to any prefix key of your choice
+;; (setq helm-gtags-prefix-key "\C-c")
+
+(setq
+ helm-gtags-ignore-case t
+ helm-gtags-auto-update t
+ helm-gtags-use-input-at-cursor t
+ helm-gtags-pulse-at-cursor t
+ helm-gtags-suggested-key-mapping t
+ )
+
+(require 'helm-gtags)
+
+;; Enable helm-gtags-mode in Dired so you can jump to any tag
+;; when navigate project tree with Dired
+(add-hook 'dired-mode-hook 'helm-gtags-mode)
+
+;; Enable helm-gtags-mode in Eshell for the same reason as above
+(add-hook 'eshell-mode-hook 'helm-gtags-mode)
+
+;; Enable helm-gtags-mode in languages that GNU Global supports
+(add-hook 'c-mode-hook 'helm-gtags-mode)
+(add-hook 'c++-mode-hook 'helm-gtags-mode)
+(add-hook 'java-mode-hook 'helm-gtags-mode)
+(add-hook 'asm-mode-hook 'helm-gtags-mode)
+
+;; key bindings
+;;(define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-select)
+(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+
+;;(define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+;;(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+;;(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+
+
+(require 'function-args)
+(fa-config-default)
+
